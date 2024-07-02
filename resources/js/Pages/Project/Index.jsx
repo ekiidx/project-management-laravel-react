@@ -6,7 +6,7 @@ import { PROJECT_STATUS_CLASS_MAP, PROJECT_STATUS_TEXT_MAP } from "@/constants.j
 import { Head, Link, router } from "@inertiajs/react";
 import { ChevronUpIcon, ChevronDownIcon } from '@heroicons/react/16/solid';
 
-export default function Index({ auth, projects, queryParams = null }) {
+export default function Index({ auth, projects, queryParams = null, success }) {
     // queryParams will always be something (an object)
     queryParams = queryParams || {}
     const searchFieldChanged = (name, value ) => {
@@ -41,10 +41,23 @@ export default function Index({ auth, projects, queryParams = null }) {
     return (
         <AuthenticatedLayout 
             user={auth.user}
-            header={<h2 className="font-semibold text-xl text-gray-800 leading-tight">Projects</h2>}
+            header={
+            <div className="flex justify-between items-center">
+                <h2 className="font-semibold text-xl text-gray-800 leading-tight">Projects</h2>
+                <Link href={route("project.create")} className="bg-emerald-500 py-1 px-3 text-white font-bold rounded shadow transition-all hover:bg-emerald-600">
+                    Add New
+                </Link>
+            </div>
+            }
         >
 
             <Head title="Projects" />
+            
+            {success && (
+                <div className="bg-emerald-500 py-2 px-4 text-white font-bold rounded">
+                {success}
+            </div>
+            )}
 
             <div className="py-12">
                 <div className="max-w-7xl mx-auto sm:px-6 lg:px-8">
