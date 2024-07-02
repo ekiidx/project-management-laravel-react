@@ -16,6 +16,6 @@ class Task extends Model
 
     public function createdBy()
     {
-        return $this->belongsTo(User::class, 'updated_by');
+        return $this->belongsTo(User::class, 'created_by');
     }
 }

@@ -9,6 +9,10 @@ use Illuminate\Support\Facades\Storage;
 
 class ProjectResource extends JsonResource
 {
+
+    // Remove JSON wrap around project object data
+    public static $wrap = false;
+
     /**
      * Transform the resource into an array.
      *
