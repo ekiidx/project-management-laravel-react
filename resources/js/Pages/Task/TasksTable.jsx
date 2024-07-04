@@ -6,38 +6,44 @@ import { ChevronUpIcon, ChevronDownIcon } from '@heroicons/react/16/solid';
 import TableHeading from "@/Components/TableHeading";
 import { TASK_STATUS_CLASS_MAP, TASK_STATUS_TEXT_MAP } from "@/constants.jsx";
 
-const searchFieldChanged = (name, value ) => {
-    if(value) {
-        queryParams[name] = value
-    }else {
-        delete queryParams[name]
-    }
-    router.get(route('task.index'), queryParams);
-};
-
-const onKeyPress = (name, e) => {
-    if (e.key !== 'Enter') return;
-
-    searchFieldChanged(name, e.target.value);
-};
-
-const sortChanged = (name) => {
-    if (name === queryParams.sort_field) {
-        if(queryParams.sort_direction === 'asc') {
-            queryParams.sort_direction = 'desc'
+export default function TasksTable({ tasks, success, queryParams = null, }) {
+    // normalize queryParams - will always be something (an object)
+    queryParams = queryParams || {}
+    const searchFieldChanged = (name, value ) => {
+        if(value) {
+            queryParams[name] = value;
         }else {
-            queryParams.sort_direction = 'asc'
+            delete queryParams[name];
         }
-    }else{
-        queryParams.sort_field = name;
-        queryParams.sort_direction = 'asc';
-    }
-    router.get(route('task.index'), queryParams);
-};
-
-export default function TasksTable({ tasks, queryParams }) {
+        router.get(route('task.index'), queryParams);
+    };
+    
+    const onKeyPress = (name, e) => {
+        if (e.key !== 'Enter') return;
+    
+        searchFieldChanged(name, e.target.value);
+    };
+    
+    const sortChanged = (name) => {
+        if (name === queryParams.sort_field) {
+            if(queryParams.sort_direction === 'asc') {
+                queryParams.sort_direction = 'desc';
+            }else {
+                queryParams.sort_direction = 'asc';
+            }
+        }else{
+            queryParams.sort_field = name;
+            queryParams.sort_direction = 'asc';
+        }
+        router.get(route('task.index'), queryParams);
+    };
     return (
         <>
+            {success && (
+                <div className="bg-emerald-500 py-2 px-4 text-white rounded mb-4">
+                    {success}
+                </div>
+            )}
             <table className="w-full text-sm text-left rtl:text-right">
                 <thead className="text-xs uppercase">
                     <tr className="text-nowrap">
@@ -67,7 +73,7 @@ export default function TasksTable({ tasks, queryParams }) {
                             Status
                         </TableHeading>
                         <TableHeading 
-                            name="create_date"
+                            name="created_at"
                             sort_field={queryParams.sort_field}
                             sort_direction={queryParams.sort_direction}
                             sortChanged={sortChanged}
@@ -134,7 +140,7 @@ export default function TasksTable({ tasks, queryParams }) {
                     </tr>
                 </thead>
                 <tbody>
-                    {tasks.data.map(task => (
+                    {tasks.data.map((task) => (
                         <tr key={task.id} className="border-b">
                             <td className="px-3 py-2">{task.id}</td>
                             <td className="px-3 py-2">

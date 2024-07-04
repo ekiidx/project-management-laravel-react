@@ -1,10 +1,18 @@
 <?php
 
 namespace App\Http\Controllers;
+
+use App\Http\Resources\ProjectResource;
 use App\Http\Resources\TaskResource;
+use App\Http\Resources\UserResource;
+use App\Models\Project;
+use App\Models\Task;
 use App\Http\Requests\StoreTaskRequest;
 use App\Http\Requests\UpdateTaskRequest;
-use App\Models\Task;
+use App\Models\User;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Str;
 
 class TaskController extends Controller
 {
@@ -31,6 +39,7 @@ class TaskController extends Controller
             "tasks" => TaskResource::collection($tasks),
             // If empty array, pass null with ?: null
             'queryParams' => request()->query() ?: null,
+            'success' => session('success'),
         ]);
     }
 
@@ -39,7 +48,13 @@ class TaskController extends Controller
      */
     public function create()
     {
-        //
+        $projects = Project::query()->orderBy('name', 'asc')->get();
+        $users = User::query()->orderBy('name', 'asc')->get();
+        
+        return inertia("Task/Create", [
+            'projects' => ProjectResource::collection($projects),
+            'users' => UserResource::collection($users),
+        ]);
     }
 
     /**

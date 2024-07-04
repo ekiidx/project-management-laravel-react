@@ -8,7 +8,7 @@ import { ChevronUpIcon, ChevronDownIcon } from '@heroicons/react/16/solid';
 import TableHeading from "@/Components/TableHeading";
 
 export default function Index({ auth, projects, queryParams = null, success }) {
-    // queryParams will always be something (an object)
+    // normalize queryParams - will always be something (an object)
     queryParams = queryParams || {}
     const searchFieldChanged = (name, value ) => {
         if(value) {
@@ -95,7 +95,7 @@ export default function Index({ auth, projects, queryParams = null, success }) {
                                             Status
                                         </TableHeading>
                                         <TableHeading 
-                                            name="create_date"
+                                            name="created_at"
                                             sort_field={queryParams.sort_field}
                                             sort_direction={queryParams.sort_direction}
                                             sortChanged={sortChanged}

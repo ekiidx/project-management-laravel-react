@@ -1,16 +1,12 @@
 import AuthenticatedLayout from "@/Layouts/AuthenticatedLayout";
-import { Head } from "@inertiajs/react";
+import { Head, Link } from "@inertiajs/react";
 import TasksTable from "./TasksTable";
 
-export default function Index({ auth, tasks, queryParams = null }) {
-    // queryParams will always be something (an object)
-    queryParams = queryParams || {}
-
+export default function Index({ auth, success, tasks, queryParams = null }) {
     return (
         <AuthenticatedLayout 
             user={auth.user}
-            header={<h2 className="font-semibold text-xl text-gray-800 leading-tight">Tasks</h2>}
-        >
+            header={<h2 className="font-semibold text-xl text-gray-800 leading-tight">Tasks</h2>}>
 
             <Head title="Tasks" />
 
@@ -19,7 +15,10 @@ export default function Index({ auth, tasks, queryParams = null }) {
                     <div className="bg-white overflow-hidden shadow-sm sm:rounded-lg">
                         <div className="p-6 text-gray-900">
                             {/* <pre>{JSON.stringify(tasks, undefined, 2)}</pre> */}
-                            <TasksTable tasks={tasks} queryParams={queryParams} />
+                            <TasksTable 
+                                tasks={tasks} 
+                                queryParams={queryParams}
+                                success={success} />
                         </div>
                     </div>
                 </div>
