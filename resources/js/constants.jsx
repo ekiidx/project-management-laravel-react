@@ -28,3 +28,15 @@ export const PROJECT_STATUS_CLASS_MAP = {
     medium: "Medium",
     high: "High",
   };
+  export const USER_STATUS_CLASS_MAP = {
+    // define your status class map here
+    pending: "bg-amber-500",
+    in_progress: "bg-blue-500",
+    completed: "bg-green-500",
+  };
+  export const USER_STATUS_TEXT_MAP = {
+    // define your status text map here
+    pending: "Pending",
+    in_progress: "In Progress",
+    completed: "Completed",
+  };

@@ -3,21 +3,21 @@ import { PROJECT_STATUS_CLASS_MAP, PROJECT_STATUS_TEXT_MAP } from "@/constants.j
 import { Head, Link } from "@inertiajs/react";
 import TasksTable from "../Task/TasksTable";
 
-export default function Show({ auth, success, project, tasks, queryParams }) {
+export default function Show({ auth, success, project, tasks, if_tasks, queryParams }) {
     return (
         <AuthenticatedLayout
             user={auth.user}
             header={
                 <h2 className="font-semibold text-xl leading-tight">
-                    {`Project "${project.name}"`}
+                    {`Project "${project.project_name}"`}
                 </h2>
             }
         >
-            <Head title={`Project "${project.name}"`} />
+            <Head title={`Project "${project.project_name}"`} />
 
-            <div className="py-12">
+            <div className="py-3">
                 <div className="max-w-7xl mx-auto sm:px-6 lg:px-8">
-                    <div className="shadow-sm sm:rounded-lg">
+                    <div className="bg-white shadow-sm sm:rounded-lg">
                         <div className="mb-2">
                             <img
                                 src={project.image_path}
@@ -34,7 +34,7 @@ export default function Show({ auth, success, project, tasks, queryParams }) {
                                     </div>
                                     <div className="mb-4">
                                         <label className="font-bold text-lg">Project Name</label>
-                                        <p className="mt-1'">{project.name}</p>
+                                        <p className="mt-1'">{project.project_name}</p>
                                     </div>
                                     <div className="mb-4">
                                         <label className="font-bold text-lg">Project Status</label>
@@ -75,14 +75,25 @@ export default function Show({ auth, success, project, tasks, queryParams }) {
                 </div>
             </div>
 
-            <div className="py-12">
+            <div className="pb-12">
                 <div className="max-w-7xl mx-auto sm:px-6 lg:px-8">
-                    <div className="shadow-sm sm:rounded-lg">
-                        <div className="p-6">
+                    <div className="bg-white overflow-hidden shadow-sm sm:rounded-lg">
+                        <div className="p-6 text-gray-900">
+
+                            <div className="flex justify-between items-center">
+                                <h2 className="font-semibold text-xl text-gray-800 leading-tight">
+                                    Tasks
+                                </h2>
+                                <Link href={route("task.create")} className="bg-emerald-500 py-1 px-3 text-white font-bold rounded shadow transition-all hover:bg-emerald-600">
+                                    New Task
+                                </Link>
+                            </div>
+                            { if_tasks && 
                             <TasksTable
                                 tasks={tasks}
                                 success={success}
-                                queryParams={queryParams} />
+                                queryParams={queryParams} 
+                            /> }
                         </div>
                     </div>
                 </div>

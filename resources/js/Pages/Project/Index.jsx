@@ -39,6 +39,13 @@ export default function Index({ auth, projects, queryParams = null, success }) {
         router.get(route('project.index'), queryParams);
     };
 
+    const deleteProject = (project) => {
+        if (!window.confirm("Are you sure you want to delete the project?")) {
+          return;
+        }
+        router.delete(route("project.destroy", project.id));
+      };
+
     return (
         <AuthenticatedLayout 
             user={auth.user}
@@ -46,7 +53,7 @@ export default function Index({ auth, projects, queryParams = null, success }) {
             <div className="flex justify-between items-center">
                 <h2 className="font-semibold text-xl text-gray-800 leading-tight">Projects</h2>
                 <Link href={route("project.create")} className="bg-emerald-500 py-1 px-3 text-white font-bold rounded shadow transition-all hover:bg-emerald-600">
-                    Add New
+                    New Project
                 </Link>
             </div>
             }
@@ -60,7 +67,7 @@ export default function Index({ auth, projects, queryParams = null, success }) {
             </div>
             )}
 
-            <div className="py-12">
+            <div className="py-3">
                 <div className="max-w-7xl mx-auto sm:px-6 lg:px-8">
                     <div className="bg-white overflow-hidden shadow-sm sm:rounded-lg">
                         <div className="p-6 text-gray-900">
@@ -69,17 +76,9 @@ export default function Index({ auth, projects, queryParams = null, success }) {
                             <table className="w-full text-sm text-left rtl:text-right">
                                 <thead className="text-xs uppercase">
                                     <tr className="text-nowrap">
-                                        <TableHeading 
-                                            name="id"
-                                            sort_field={queryParams.sort_field}
-                                            sort_direction={queryParams.sort_direction}
-                                            sortChanged={sortChanged}
-                                        >
-                                            ID
-                                        </TableHeading>
                                         <th className="px-3 py-3">Image</th>
                                         <TableHeading 
-                                            name="name"
+                                            name="project_name"
                                             sort_field={queryParams.sort_field}
                                             sort_direction={queryParams.sort_direction}
                                             sortChanged={sortChanged}
@@ -137,10 +136,10 @@ export default function Index({ auth, projects, queryParams = null, success }) {
                                         <th className="px-3 py-3">
                                             <TextInput 
                                                 className="w-full"
-                                                defaultValue={queryParams.name}
+                                                defaultValue={queryParams.project_name}
                                                 placeholder="Project Name" 
-                                                onBlur={e => searchFieldChanged('name', e.target.value)}
-                                                onKeyPress={e => onKeyPress('name', e)} 
+                                                onBlur={e => searchFieldChanged('project_name', e.target.value)}
+                                                onKeyPress={e => onKeyPress('project_name', e)} 
                                             />
                                         </th>
                                         <th className="px-3 py-3">
@@ -164,13 +163,12 @@ export default function Index({ auth, projects, queryParams = null, success }) {
                                 <tbody>
                                     {projects.data.map(project => (
                                         <tr key={project.id} className="border-b">
-                                            <td className="px-3 py-2">{project.id}</td>
                                             <td className="px-3 py-2">
                                                 <img src={project.image_path} style={{width: 60}} alt="" />
                                             </td>
                                             <td className="px-3 py-2 hover:underline text-nowrap">
                                                 <Link href={route('project.show', project.id)}>
-                                                    {project.name}
+                                                    {project.project_name}
                                                 </Link>
                                             </td>
                                             <td className="px-3 py-2">
@@ -188,11 +186,13 @@ export default function Index({ auth, projects, queryParams = null, success }) {
                                                 >
                                                     Edit 
                                                 </Link>
-                                                <Link 
-                                                    href={route('project.destroy', project.id)} className="font-medium text-red-600 hover:underline mx-1"
+                                                <button
+                                                    onClick={(e) => deleteProject(project)}
+                                                    className="font-medium text-red-600
+                                                    hover:underline mx-1"
                                                 >
                                                     Delete
-                                                </Link>
+                                                </button>
                                             </td>
                                         </tr>
                                     ))}

@@ -6,19 +6,32 @@ import TextInput from "@/Components/TextInput";
 import AuthenticatedLayout from "@/Layouts/AuthenticatedLayout";
 import { Head, Link, useForm } from "@inertiajs/react";
 
-export default function Create({ auth }) {
+export default function Create({ auth, user_id}) {
     const {data, setData, post, errors, reset} = useForm({
-        image: '',
-        name: '',
+        project_name: '',
+        // client_name: '',
+        // client_email: '',
         status: '',
         description: '',
         due_date: '',
+        image: '',
+        user_id: user_id
     })
 
+    const addField = () => {
+        setFields([...fields, { value: '' }]);
+    };
+    
+    const removeField = () => {
+        if (fields.length > 1) {
+        setFields(fields.slice(0, -1));
+        }
+    };
+    
     const onSubmit = (e) => {
         e.preventDefault();
 
-        post(route('project.store'));
+        post(route('project.store', user_id));
     }
 
     return(
@@ -34,7 +47,7 @@ export default function Create({ auth }) {
 
             <Head title="Create New Project" />
 
-            <div className="py-12">
+            <div className="py-3">
                 <div className="max-w-7xl mx-auto sm:px-6 lg:px-8">
                     <div className="bg-white overflow-hidden shadow-sm sm:rounded-lg">
                
@@ -42,27 +55,67 @@ export default function Create({ auth }) {
                             onSubmit={onSubmit}
                             className="p-4 sm:p-8 shadow sm:rounded-lg">
                             <div className="mb-4">
-                                <InputLabel htmlFor="project_image_path" value="Project Image" />
-                                <TextInput
-                                    id="project_image_path"
-                                    type="file"
-                                    name="image"
-                                    className="mt-1 block w-full"
-                                    onChange={e => setData('image', e.target.files[0])} />
-                                <InputError message={errors.image} className="mt-2" />
-                            </div>
-                            <div className="mb-4">
                                 <InputLabel htmlFor="project_name" value="Project Name" />
                                 <TextInput
                                     id="project_name"
                                     type="text"
-                                    name="name"
-                                    value={data.name}
+                                    name="project_name"
+                                    value={data.project_name}
                                     className="mt-1 block w-full"
                                     isFocused={true}
-                                    onChange={(e) => setData("name", e.target.value)} />
-                                <InputError message={errors.name} clsasName="mt-2" />
+                                    onChange={(e) => setData("project_name", e.target.value)} />
+                                <InputError message={errors.project_name} className="mt-2" />
                             </div>
+                            {/* <div className="mb-4">
+                                <InputLabel htmlFor="project_client" value="Client Name" />
+                                <TextInput
+                                    id="client_name"
+                                    type="text"
+                                    name="client_name"
+                                    value={data.client_name}
+                                    className="mt-1 block w-full"
+                                    isFocused={true}
+                                    onChange={(e) => setData("client_name", e.target.value)} />
+                                <InputError message={errors.client_name} className="mt-2" />
+                            </div>
+                            <div className="mb-4">
+                                <InputLabel htmlFor="client_email" value="Client Email" />
+                                <TextInput
+                                    id="client_email"
+                                    type="email"
+                                    name="client_email"
+                                    value={data.client_email}
+                                    className="mt-1 block w-full"
+                                    isFocused={true}
+                                    onChange={(e) => setData("client_email", e.target.value)} />
+                                <InputError message={errors.client_email} className="mt-2" />
+                            </div> */}
+
+                            {/* <div>
+                                {fields.map((field, index) => (
+                                <div key={index}>
+                                    <input
+                                    type="text"
+                                    value={field.value}
+                                    placeholder={`Destination ${index + 1}`}
+                                    onChange={(e) => {
+                                        const updatedFields = [...fields];
+                                        updatedFields[index].value = e.target.value;
+                                        setFields(updatedFields);
+                                    }}
+                                    className="border rounded p-2 mb-2"
+                                    />
+                                </div>
+                                ))}
+                                <button onClick={addField} className="bg-blue-500 text-white px-4 py-2 rounded mr-2">
+                                Add Destination
+                                </button>
+                                <button onClick={removeField} className="bg-red-500 text-white px-4 py-2 rounded">
+                                Remove Destination
+                                </button>
+                            </div> */}
+
+
                             <div className="mb-4">
                                 <InputLabel htmlFor="project_description" value="Project Description" />
                                 <TextAreaInput
@@ -98,6 +151,16 @@ export default function Create({ auth }) {
                                     <option value="completed">Completed</option>
                                 </SelectInput>
                                 <InputError message={errors.project_status} className="mt-2" />
+                            </div>
+                            <div className="mb-4">
+                                <InputLabel htmlFor="project_image_path" value="Project Image" />
+                                <TextInput
+                                    id="project_image_path"
+                                    type="file"
+                                    name="image"
+                                    className="mt-1 block w-full"
+                                    onChange={e => setData('image', e.target.files[0])} />
+                                <InputError message={errors.image} className="mt-2" />
                             </div>
                             <div className="text-right">
                                 <Link className="bg-gray-100 py-1 px-3 rounded shadow transition-all hover:bg-gray-200 mr-2">

@@ -21,16 +21,20 @@ class ProjectResource extends JsonResource
     public function toArray(Request $request): array
     {
         return [
-             'id' => $this->id,
-             'name' => $this->name,
-             'description' => $this->description,
-             'created_at' => (new Carbon($this->created_at))->format('Y-m-d'),
-             'due_date' => (new Carbon($this->due_date))->format('Y-m-d'),
-             'status' => $this->status,
-             // if the image_path exists, use Storage facade url, and pass $this->image_path, if not, pass empty string
-             'image_path' => $this->image_path ? Storage::url($this->image_path) : '',
-             'createdBy' => new UserResource($this->createdBy),
-             'updatedBy' => new UserResource($this->updatedBy),
+            'id' => $this->id,
+            'project_name' => $this->project_name,
+            'client_name' => $this->client_name,
+            'client_email' => $this->client_email,
+            'description' => $this->description,
+            'created_at' => (new Carbon($this->created_at))->format('Y-m-d'),
+            'due_date' => (new Carbon($this->due_date))->format('Y-m-d'),
+            'status' => $this->status,
+            // if the image_path exists, use Storage facade url, and pass $this->image_path, if not, pass empty string
+            'image_path' => $this->image_path && !(str_starts_with($this->image_path, 'http')) ?
+                Storage::url($this->image_path) : $this->image_path,
+            'createdBy' => new UserResource($this->createdBy),
+            'updatedBy' => new UserResource($this->updatedBy),
+            'user_id' => $this->user_id,
         ];
     }
 }
