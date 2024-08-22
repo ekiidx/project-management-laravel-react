@@ -23,10 +23,10 @@ class ProjectController extends Controller
     {
         $query = Project::query();
 
-        $sortField = request("sort_field", 'created_at');
-        $sortDirection = request("sort_direction", "desc");
+        $sortField = request('sort_field', 'created_at');
+        $sortDirection = request('sort_direction', 'desc');
 
-        if (request("project_name")) {
+        if (request('project_name')) {
             $query->where("project_name", "like", "%" . request("project_name") . "%");
         }
         if (request("status")) {

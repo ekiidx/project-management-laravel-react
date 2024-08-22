@@ -1,6 +1,7 @@
 import AuthenticatedLayout from "@/Layouts/AuthenticatedLayout";
 import { TASK_STATUS_CLASS_MAP, TASK_STATUS_TEXT_MAP } from "@/constants";
-import { Head, Link } from "@inertiajs/react";
+import { Head, Link, router } from "@inertiajs/react";
+import TableHeading from "@/Components/TableHeading";
 
 export default function Dashboard({
   auth,
@@ -11,7 +12,39 @@ export default function Dashboard({
   totalCompletedTasks,
   myCompletedTasks,
   activeTasks,
+  queryParams = null
 }) {
+
+  queryParams = queryParams || {}
+  const searchFieldChanged = (name, value ) => {
+      if(value) {
+          queryParams[name] = value
+      }else {
+          delete queryParams[name]
+      }
+      router.get(route('dashboard'), queryParams);
+  };
+
+  // const onKeyPress = (name, e) => {
+  //     if (e.key !== 'Enter') return;
+
+  //     searchFieldChanged(name, e.target.value);
+  // };
+
+  const sortChanged = (name) => {
+      if (name === queryParams.sort_field) {
+          if(queryParams.sort_direction === 'asc') {
+              queryParams.sort_direction = 'desc'
+          }else {
+              queryParams.sort_direction = 'asc'
+          }
+      }else{
+          queryParams.sort_field = name;
+          queryParams.sort_direction = 'asc';
+      }
+      router.get(route('dashboard'), queryParams);
+  };
+
   return (
     <AuthenticatedLayout
       user={auth.user}
@@ -69,11 +102,46 @@ export default function Dashboard({
               <table className="mt-3 w-full text-sm text-left rtl:text-right text-gray-500">
                 <thead className="text-xs text-gray-700 uppercase border-b-2 border-gray-500">
                   <tr>
-                    <th className="px-3 py-3">ID</th>
-                    <th className="px-3 py-3">Project</th>
-                    <th className="px-3 py-3">Task</th>
-                    <th className="px-3 py-3">Status</th>
-                    <th className="px-3 py-3">Due Date</th>
+                  <TableHeading 
+                        name="id"
+                        sort_field={queryParams.sort_field}
+                        sort_direction={queryParams.sort_direction}
+                        sortChanged={sortChanged}
+                    >
+                        ID
+                    </TableHeading>
+                    <TableHeading 
+                        name="project_id"
+                        sort_field={queryParams.sort_field}
+                        sort_direction={queryParams.sort_direction}
+                        sortChanged={sortChanged}
+                    >
+                        Project
+                    </TableHeading>
+                    <TableHeading 
+                        name="name"
+                        sort_field={queryParams.sort_field}
+                        sort_direction={queryParams.sort_direction}
+                        sortChanged={sortChanged}
+                    >
+                        Task
+                    </TableHeading>
+                    <TableHeading 
+                        name="status"
+                        sort_field={queryParams.sort_field}
+                        sort_direction={queryParams.sort_direction}
+                        sortChanged={sortChanged}
+                    >
+                        Status
+                    </TableHeading>
+                    <TableHeading 
+                        name="due_date"
+                        sort_field={queryParams.sort_field}
+                        sort_direction={queryParams.sort_direction}
+                        sortChanged={sortChanged}
+                    >
+                        Due Date
+                    </TableHeading>
                   </tr>
                 </thead>
                 <tbody>
