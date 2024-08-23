@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Http\Resources\UserCrudResource;
 use App\Http\Resources\TaskResource;
+use App\Models\Project;
 use App\Models\User;
 use App\Http\Requests\StoreUserRequest;
 use App\Http\Requests\UpdateUserRequest;
@@ -15,27 +16,33 @@ class UserController extends Controller
      */
     public function index()
     {
-        $query = User::query();
+        $user = auth()->user();
 
-        $sortField = request("sort_field", 'created_at');
-        $sortDirection = request("sort_direction", "desc");
+        if ($user->role === 'client') {}
+            
+        if ($user->role === 'admin') {
+            $query = User::query();
 
-        if (request("name")) {
-            $query->where("name", "like", "%" . request("name") . "%");
+            $sortField = request("sort_field", 'created_at');
+            $sortDirection = request("sort_direction", "desc");
+    
+            if (request("name")) {
+                $query->where("name", "like", "%" . request("name") . "%");
+            }
+            if (request("email")) {
+                $query->where("email", "like", "%" . request("email") . "%");
+            }
+    
+            $users = $query->orderBy($sortField, $sortDirection)
+                ->paginate(10)
+                ->onEachSide(1);
+    
+            return inertia("User/Index", [
+                "users" => UserCrudResource::collection($users),
+                'queryParams' => request()->query() ?: null,
+                'success' => session('success'),
+            ]);
         }
-        if (request("email")) {
-            $query->where("email", "like", "%" . request("email") . "%");
-        }
-
-        $users = $query->orderBy($sortField, $sortDirection)
-            ->paginate(10)
-            ->onEachSide(1);
-
-        return inertia("User/Index", [
-            "users" => UserCrudResource::collection($users),
-            'queryParams' => request()->query() ?: null,
-            'success' => session('success'),
-        ]);
     }
 
     /**
@@ -66,8 +73,11 @@ class UserController extends Controller
     public function show(User $user)
     {
         // $user = User::findOrFail($user->id);
+        $projects = Project::where('user_id', $user->id)->get();
+
         return inertia('User/Show', [
-            'user' => $user
+            'user' => $user,
+            'projects' => $projects
         ]);
     }
 

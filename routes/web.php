@@ -21,7 +21,8 @@ Route::middleware(['auth', 'verified'])->group(function () {
     //     ->name('task.myTasks');
     Route::resource('/task', TaskController::class);
     Route::resource('/user', UserController::class);
-    Route::get('/user/{id}/project/create', [ProjectController::class, 'create'])->name('projects.create');
+    Route::get('/project/create', [ProjectController::class, 'create'])->name('project.create');
+    Route::get('/user/{id}/project/create', [ProjectController::class, 'create_with_id'])->name('project.create_with_id');
     Route::post('/user/{id}/project/store', [ProjectController::class, 'store']);
     Route::get('/project/{id}/task/create', [TaskController::class, 'create'])->name('tasks.create');
     Route::post('/project/{id}/task/store', [TaskController::class, 'store']);

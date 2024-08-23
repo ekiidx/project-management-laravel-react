@@ -96,7 +96,7 @@ export default function Dashboard({
           <div className="bg-white overflow-hidden shadow-sm sm:rounded-lg">
             <div className="p-6 text-gray-900">
               <h3 className="text-xl font-semibold">
-                My Active Tasks
+                Tasks
               </h3>
 
               <table className="mt-3 w-full text-sm text-left rtl:text-right text-gray-500">

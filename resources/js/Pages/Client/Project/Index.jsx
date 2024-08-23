@@ -9,7 +9,7 @@ import TableHeading from "@/Components/TableHeading";
 
 export default function Index({ auth, projects, queryParams = null, success }) {
     const userRole = auth.user.role
-    // normalize queryParams - will always be something (an object)
+  
     queryParams = queryParams || {}
     const searchFieldChanged = (name, value ) => {
         if(value) {
@@ -19,13 +19,13 @@ export default function Index({ auth, projects, queryParams = null, success }) {
         }
         router.get(route('project.index'), queryParams);
     };
-
+  
     const onKeyPress = (name, e) => {
         if (e.key !== 'Enter') return;
-
+  
         searchFieldChanged(name, e.target.value);
     };
-
+  
     const sortChanged = (name) => {
         if (name === queryParams.sort_field) {
             if(queryParams.sort_direction === 'asc') {
@@ -37,15 +37,8 @@ export default function Index({ auth, projects, queryParams = null, success }) {
             queryParams.sort_field = name;
             queryParams.sort_direction = 'asc';
         }
-        router.get(route('project.index'), queryParams);
+        router.get(route('client.project.index'), queryParams);
     };
-
-    const deleteProject = (project) => {
-        if (!window.confirm("Are you sure you want to delete the project?")) {
-          return;
-        }
-        router.delete(route("project.destroy", project.id));
-      };
 
     return (
         <AuthenticatedLayout 
@@ -53,12 +46,6 @@ export default function Index({ auth, projects, queryParams = null, success }) {
             header={
             <div className="flex justify-between items-center">
                 <h2 className="font-semibold text-xl text-gray-800 leading-tight">Projects</h2>
-
-                {userRole === 'admin' && 
-                    <Link href={route("project.create")} className="bg-emerald-500 py-1 px-3 text-white font-bold rounded shadow transition-all hover:bg-emerald-600">
-                    New Project
-                    </Link>
-                }
             
             </div>
             }
@@ -77,6 +64,13 @@ export default function Index({ auth, projects, queryParams = null, success }) {
                     <div className="bg-white overflow-hidden shadow-sm sm:rounded-lg">
                         <div className="p-6 text-gray-900">
                             {/* <pre>{JSON.stringify(projects, undefined, 2)}</pre> */}
+
+                            {/* {projects.map(project => (
+                                <div key={project.id}>
+                                    {project.project_name}
+                                    {project.client_name}
+                                </div>
+                            ))} */}
 
                             <table className="w-full text-sm text-left rtl:text-right">
                                 <thead className="text-xs uppercase">
@@ -166,7 +160,7 @@ export default function Index({ auth, projects, queryParams = null, success }) {
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    {projects.data.map(project => (
+                                    {projects.map(project => (
                                         <tr key={project.id} className="border-b">
                                             <td className="px-3 py-2">
                                                 <img src={project.image_path} style={{width: 60}} alt="" />
@@ -207,7 +201,7 @@ export default function Index({ auth, projects, queryParams = null, success }) {
                                     ))}
                                 </tbody>
                             </table>
-                            <Pagination links={projects.meta.links} />
+                       
                         </div>
                     </div>
                 </div>

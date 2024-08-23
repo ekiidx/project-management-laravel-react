@@ -18,6 +18,7 @@ return new class extends Migration
             $table->string('client_name')->nullable();
             $table->string('client_email')->nullable();
             $table->longText('description')->nullable();
+            $table->timestamp('start_date')->nullable();
             $table->timestamp('due_date')->nullable();
             $table->string('status');
             $table->string('image_path')->nullable();

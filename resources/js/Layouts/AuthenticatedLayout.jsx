@@ -7,6 +7,7 @@ import { Link } from '@inertiajs/react';
 
 export default function AuthenticatedLayout({ user, header, children }) {
     const [showingNavigationDropdown, setShowingNavigationDropdown] = useState(false);
+    const userRole = user.role;
 
     return (
         <div className="min-h-screen bg-gray-100">
@@ -20,23 +21,43 @@ export default function AuthenticatedLayout({ user, header, children }) {
                                 </Link>
                             </div>
 
-                            <div className="hidden space-x-8 sm:-my-px sm:ms-10 sm:flex">
-                                <NavLink href={route('dashboard')} active={route().current('dashboard')}>
-                                    Dashboard
-                                </NavLink>
-                                <NavLink href={route('user.index')} active={route().current('user.index')}>
-                                    Clients
-                                </NavLink>
-                                <NavLink href={route('project.index')} active={route().current('project.index')}>
-                                    Projects
-                                </NavLink>
-                                <NavLink href={route('invoice.index')} active={route().current('invoice.index')}>
-                                    Invoices
-                                </NavLink>
-                                {/* <NavLink href={route('task.index')} active={route().current('task.index')}>
-                                    Tasks
-                                </NavLink> */}
-                            </div>
+                            {userRole === 'client' && 
+                                <div className="hidden space-x-8 sm:-my-px sm:ms-10 sm:flex">
+                                    <NavLink href={route('dashboard')} active={route().current('dashboard')}>
+                                        Dashboard
+                                    </NavLink>
+                                    <NavLink href={route('project.index')} active={route().current('project.index')}>
+                                        Projects
+                                    </NavLink>
+                                    <NavLink href={route('invoice.index')} active={route().current('invoice.index')}>
+                                        Invoices
+                                    </NavLink>
+                                    {/* <NavLink href={route('task.index')} active={route().current('task.index')}>
+                                        Tasks
+                                    </NavLink> */}
+                                </div>
+                            }
+
+                            {userRole === 'admin' && 
+                                <div className="hidden space-x-8 sm:-my-px sm:ms-10 sm:flex">
+                                    <NavLink href={route('dashboard')} active={route().current('dashboard')}>
+                                        Dashboard
+                                    </NavLink>
+                                    <NavLink href={route('user.index')} active={route().current('user.index')}>
+                                        Clients
+                                    </NavLink>
+                                    <NavLink href={route('project.index')} active={route().current('project.index')}>
+                                        Projects
+                                    </NavLink>
+                                    <NavLink href={route('invoice.index')} active={route().current('invoice.index')}>
+                                        Invoices
+                                    </NavLink>
+                                    {/* <NavLink href={route('task.index')} active={route().current('task.index')}>
+                                        Tasks
+                                    </NavLink> */}
+                                </div>
+                            }
+
                         </div>
 
                         <div className="hidden sm:flex sm:items-center sm:ms-6">

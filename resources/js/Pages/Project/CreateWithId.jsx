@@ -6,8 +6,8 @@ import TextInput from "@/Components/TextInput";
 import AuthenticatedLayout from "@/Layouts/AuthenticatedLayout";
 import { Head, Link, useForm } from "@inertiajs/react";
 
-export default function Create({ auth }) {
-    const {data, setData, post, errors, reset} = useForm({
+export default function Create({ auth, user_id }) {
+    const { data, setData, post, errors, reset } = useForm({
         project_name: '',
         // client_name: '',
         // client_email: '',
@@ -16,19 +16,18 @@ export default function Create({ auth }) {
         start_date: '',
         due_date: '',
         image: '',
-        // user_id: user_id
-        user_id: '',
+        user_id: user_id,
     })
 
-    const addField = () => {
-        setFields([...fields, { value: '' }]);
-    };
+    // const addField = () => {
+    //     setFields([...fields, { value: '' }]);
+    // };
     
-    const removeField = () => {
-        if (fields.length > 1) {
-        setFields(fields.slice(0, -1));
-        }
-    };
+    // const removeField = () => {
+    //     if (fields.length > 1) {
+    //     setFields(fields.slice(0, -1));
+    //     }
+    // };
     
     const onSubmit = (e) => {
         e.preventDefault();
@@ -77,7 +76,8 @@ export default function Create({ auth }) {
                                     value={data.user_id}
                                     className="mt-1 block w-full"
                                     isFocused={true}
-                                    onChange={(e) => setData("user_id", e.target.value)} />
+                                    // onChange={(e) => setData("user_id", e.target.value)}
+                                    disabled />
                                 <InputError message={errors.user_id} className="mt-2" />
                             </div>
                            { /* <div className="mb-4">

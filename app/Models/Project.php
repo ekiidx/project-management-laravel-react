@@ -18,16 +18,11 @@ class Project extends Model
 
     public function user()
     {
-        return $this->belongsTo(User::class, 'user_id');
+        return $this->belongsTo(User::class);
     }
 
-    public function createdBy()
-    {
-        return $this->belongsTo(User::class, 'created_by');
-    }
-
-    public function updatedBy()
-    {
-        return $this->belongsTo(User::class, 'updated_by');
-    }
+    // public function updatedBy()
+    // {
+    //     return $this->belongsTo(User::class, 'updated_by');
+    // }
 }

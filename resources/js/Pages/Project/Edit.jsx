@@ -13,6 +13,7 @@ export default function Create({ auth, project }) {
     client_email: project.client_email || "",
     status: project.status || "",
     description: project.description || "",
+    start_date: project.start_date || "",
     due_date: project.due_date || "",
     image: "",
     _method: "PUT",
@@ -122,6 +123,15 @@ export default function Create({ auth, project }) {
                 <InputLabel
                   htmlFor="project_due_date"
                   value="Project Deadline"
+                />
+
+                <TextInput
+                  id="project_start_date"
+                  type="date"
+                  name="start_date"
+                  value={data.start_date}
+                  className="mt-1 block w-full"
+                  onChange={(e) => setData("due_date", e.target.value)}
                 />
 
                 <TextInput

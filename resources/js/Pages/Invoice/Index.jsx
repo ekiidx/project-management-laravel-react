@@ -2,6 +2,7 @@ import AuthenticatedLayout from "@/Layouts/AuthenticatedLayout";
 import { Head, Link, router } from "@inertiajs/react";
 
 export default function Index({ auth }) {
+    const userRole = auth.user.role;
 
     return (
         <AuthenticatedLayout 
@@ -9,9 +10,13 @@ export default function Index({ auth }) {
             header={
             <div className="flex justify-between items-center">
                 <h2 className="font-semibold text-xl text-gray-800 leading-tight">Invoices</h2>
-                <Link href={route("project.create")} className="bg-emerald-500 py-1 px-3 text-white font-bold rounded shadow transition-all hover:bg-emerald-600">
-                    Add New
-                </Link>
+
+                {userRole === 'admin' && 
+                    <Link href={route("project.create")} className="bg-emerald-500 py-1 px-3 text-white font-bold rounded shadow transition-all hover:bg-emerald-600">
+                        Add New
+                    </Link>
+                }
+
             </div>
             }
         >
