@@ -36,6 +36,7 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::get('/products', [StripeController::class, 'products']);
 
     Route::get('/proposal', [ProposalController::class, 'create']);
+    Route::get('/invoice/create', [InvoiceController::class, 'create']);
 });
 
 Route::middleware('auth')->group(function () {
