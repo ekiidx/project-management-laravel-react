@@ -2,6 +2,8 @@
 
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\CreateProjectController;
+use App\Http\Controllers\ProposalController;
+use App\Http\Controllers\StripeController;
 use App\Http\Controllers\InvoiceController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\ProjectController;
@@ -27,7 +29,13 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::get('/project/{id}/task/create', [TaskController::class, 'create'])->name('tasks.create');
     Route::post('/project/{id}/task/store', [TaskController::class, 'store']);
 
-    Route::resource('invoice', InvoiceController::class);
+    Route::resource('/invoice', InvoiceController::class);
+
+    Route::get('/customers', [StripeController::class, 'customers']);
+    Route::get('/checkout', [StripeController::class, 'checkout']);
+    Route::get('/products', [StripeController::class, 'products']);
+
+    Route::get('/proposal', [ProposalController::class, 'create']);
 });
 
 Route::middleware('auth')->group(function () {
