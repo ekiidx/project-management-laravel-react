@@ -18,10 +18,14 @@ class UserController extends Controller
     {
         $user = auth()->user();
 
-        if ($user->role === 'client') {}
+        if ($user->role === 'client') {
+
+            return abort(404);
+        }
             
         if ($user->role === 'admin') {
-            $query = User::query();
+
+            $query = User::query()->where('role', '!=', 'admin');
 
             $sortField = request("sort_field", 'created_at');
             $sortDirection = request("sort_direction", "desc");

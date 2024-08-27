@@ -75,6 +75,14 @@ export default function Index({ auth, users, queryParams = null, success }) {
                 <table className="w-full text-sm text-left rtl:text-right text-gray-500">
                   <thead className="text-xs text-gray-700 uppercase border-gray-500">
                     <tr className="text-nowrap">
+                      <TableHeading 
+                          name="id"
+                          sort_field={queryParams.sort_field}
+                          sort_direction={queryParams.sort_direction}
+                          sortChanged={sortChanged}
+                      >
+                          ID
+                      </TableHeading>
                       <TableHeading
                         name="name"
                         sort_field={queryParams.sort_field}
@@ -140,6 +148,7 @@ export default function Index({ auth, users, queryParams = null, success }) {
                         className="bg-white border-b"
                         key={user.id}
                       >
+                        <td className="px-3 py-2">{user.id}</td>
                         <th className="px-3 py-2 text-nowrap">
                           <Link href={route('user.show', user.id)}>
                             {user.name}

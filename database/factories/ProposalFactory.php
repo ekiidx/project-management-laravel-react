@@ -7,7 +7,7 @@ use Illuminate\Database\Eloquent\Factories\Factory;
 /**
  * @extends \Illuminate\Database\Eloquent\Factories\Factory<\App\Models\Project>
  */
-class ProjectFactory extends Factory
+class ProposalFactory extends Factory
 {
     /**
      * Define the model's default state.
@@ -17,18 +17,11 @@ class ProjectFactory extends Factory
     public function definition(): array
     {
         return [
-            'project_name' => fake()->sentence(),
-            'user_id' => 1,
             'client_name' => fake()->name(),
-            'product_name' => 'event_flyer',
-            'client_email' => fake()->email(),
-            'description' => fake()->realText(),
-            'due_date' => fake()->dateTimeBetween('now', '+1 year'),
-            'status' => fake()->randomElement(['pending', 'in_progress', 'completed']),
+            'user_id' => 2,
+            'product_name' => fake()->name(),
             'stripe_payment_link' => 'https://stripe.com',
-            'project_image' => '/assets/img/default-image.jpg',
-            'created_by' => 1,
-            'updated_by' => 1,
+            'client_email' => fake()->email(),
             'created_at' => time(),
             'updated_at' => time(),
         ];

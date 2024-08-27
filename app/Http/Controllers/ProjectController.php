@@ -5,6 +5,8 @@ namespace App\Http\Controllers;
 use App\Http\Resources\ProjectResource;
 use App\Http\Resources\TaskResource;
 use App\Models\Project;
+use App\Models\Proposal;
+use App\Models\Invoice;
 use App\Models\User;
 use Illuminate\Http\Request;
 use App\Http\Requests\StoreProjectRequest;
@@ -12,6 +14,8 @@ use App\Http\Requests\UpdateProjectRequest;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
+use Spatie\Browsershot\Browsershot;
+use Carbon\Carbon;
 use Mail;
 use Illuminate\Validation\Rule;
 
@@ -125,8 +129,9 @@ class ProjectController extends Controller
 
             $request->validate([
                 'project_name' => ['required', 'max:255'],
+                'product_name' => ['required', Rule::in(['event_flyer', 'event_flyer_banner', 'event_flyer_banner_spotlights', 'monthly_host', 'unlimited_monthly_package'])],
                 // 'client_name' => ['required', 'max:255'],
-                // 'client_email' => ['required', 'max:255'],
+                'stripe_payment_link' => ['url:http,https'],
                 'image' => ['nullable', 'image'],
                 'description' => ['nullable', 'string'],
                 'start_date' => ['nullable', 'date'],
@@ -134,29 +139,77 @@ class ProjectController extends Controller
                 'status' => ['required', Rule::in(['pending', 'in_progress', 'completed'])]
             ]);
 
-            // $data = $request->validated();
-            // $project->users()->create({[
-            // ]}) 
-            // $user = User::where('id', $user)->firstOrFail();
-            // dd($request->user()->name);
-            // $id = '2';
+            $client_id = $data['user_id'] = $request->user_id;
+            $client = User::find($client_id);
 
-            $data['user_id'] = $request->user_id;
-            // $data['user_id'] = $request->input($user->id);
-            // $data['client_name'] = $request->name;
-            // $data['client_email'] = $request->email;
+            $data['client_name'] = $client->name;
+            $data['client_email'] = $client->email;
             $data['project_name'] = $request->project_name;
+            $data['product_name'] = $request->product_name;
+            $data['stripe_payment_link'] = $request->stripe_payment_link;
             $data['status'] = $request->status;
             
             /** @var $image \Illuminate\Http\UploadedFile */
-            $image = $data['image'] ?? null;
+            $image = $data['project_image'] ?? null;
             $data['created_by'] = '2';
             $data['updated_by'] = Auth::id();
             if ($image) {
-                $data['image_path'] = $image->store('project/' . Str::random(), 'public');
+                $data['project_image'] = $image->store('project/' . Str::random(), 'public');
             }
             Project::create($data);
 
+            // Create Proposal
+            $bgPath = 'assets/img/proposal-background.png';
+            $bgType = pathinfo($bgPath, PATHINFO_EXTENSION);
+            $bgData = file_get_contents($bgPath);
+            $proposal_background = 'data:image/' . $bgType . ';base64,' . base64_encode($bgData);
+
+            $logoPath = 'assets/img/vue-design-logo.png';
+            $logoType = pathinfo($logoPath, PATHINFO_EXTENSION);
+            $logoData = file_get_contents($logoPath);
+            $vue_design_logo = 'data:image/' . $logoType . ';base64,' . base64_encode($logoData);
+
+            $logoPath = 'assets/img/vue-design-icon.png';
+            $logoType = pathinfo($logoPath, PATHINFO_EXTENSION);
+            $logoData = file_get_contents($logoPath);
+            $vue_design_icon = 'data:image/' . $logoType . ';base64,' . base64_encode($logoData);
+
+            Proposal::create($data);
+
+             // Proposal Preview
+             $proposal_html = view('proposal', [
+                'client_name' => $data['client_name'],
+                'product_name' => $data['product_name'],
+                'proposal_background' => $proposal_background,
+                'vue_design_logo' => $vue_design_logo,
+                'vue_design_icon' => $vue_design_icon
+            ])->render();
+
+            $date = Carbon::now()->format('Y-m-d');
+
+            Browsershot::html($proposal_html)
+            ->format('Letter')
+            ->save('storage/proposals/' . $data['client_name'] . ' - ' . $data['product_name'] . ' - ' . $date . ' - ' . 'proposal.pdf');
+
+            // Create Invoice
+             $invoice_number = '00113';
+    
+            // Invoice Preview
+            $invoice_html = view('invoice', [
+                'client_name' => $data['client_name'],
+                'product_name' => $data['product_name'],
+                'invoice_number' => $invoice_number,
+                'proposal_background' => $proposal_background,
+                'vue_design_logo' => $vue_design_logo,
+            ])->render();
+    
+            $filename = Browsershot::html($invoice_html)
+            ->format('Letter')
+            ->save('storage/invoices/' . $data['client_name'] . ' - ' . $data['product_name'] . ' - ' . $date . ' - ' . 'invoice.pdf');
+    
+            // Invoice::create($data);
+
+            // Send Email
             $message = 'This is a test email.';
             
             Mail::send('email', [
@@ -169,7 +222,7 @@ class ProjectController extends Controller
             });
 
             return to_route('project.index')
-                ->with('success', 'Project was created');
+                ->with('success', 'Project was created.');
         }
     }
 

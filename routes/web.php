@@ -29,13 +29,15 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::get('/project/{id}/task/create', [TaskController::class, 'create'])->name('tasks.create');
     Route::post('/project/{id}/task/store', [TaskController::class, 'store']);
 
-    Route::resource('/invoice', InvoiceController::class);
-
     Route::get('/customers', [StripeController::class, 'customers']);
     Route::get('/checkout', [StripeController::class, 'checkout']);
     Route::get('/products', [StripeController::class, 'products']);
 
-    Route::get('/proposal', [ProposalController::class, 'create']);
+    Route::get('/proposals', [ProposalController::class, 'index'])->name('proposals.index');
+    Route::get('/proposals/create', [ProposalController::class, 'create'])->name('proposals.create');
+    Route::post('/proposals/store', [ProposalController::class, 'store'])->name('proposals.store');
+
+    Route::resource('/invoice', InvoiceController::class);
     Route::get('/invoice/create', [InvoiceController::class, 'create']);
 });
 

@@ -30,8 +30,9 @@ class ProjectResource extends JsonResource
             'due_date' => (new Carbon($this->due_date))->format('Y-m-d'),
             'status' => $this->status,
             // if the image_path exists, use Storage facade url, and pass $this->image_path, if not, pass empty string
-            'image_path' => $this->image_path && !(str_starts_with($this->image_path, 'http')) ?
-                Storage::url($this->image_path) : $this->image_path,
+            // 'image_path' => $this->image_path && !(str_starts_with($this->image_path, 'http')) ?
+            //     Storage::url($this->image_path) : $this->image_path,
+            'image_path' => $this->image_path,
             'created_by' => $this->user->name,
             'updated_by' => $this->user->name,
             'user_id' => $this->user->id,
