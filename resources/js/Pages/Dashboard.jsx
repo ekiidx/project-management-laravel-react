@@ -149,12 +149,12 @@ export default function Dashboard({
                     <tr key={task.id}>
                       <td className="px-3 py-2">{task.id}</td>
                       <td className="px-3 py-2 hover:underline">
-                        <Link href={route("project.show", task.project.id)}>
+                        <Link href={route("projects.show", task.project.id)}>
                           {task.project.project_name}
                         </Link>
                       </td>
                       <td className="px-3 py-2 hover:underline">
-                        <Link href={route("task.show", task.id)}>
+                        <Link href={route("tasks.show", task.id)}>
                           {task.name}
                         </Link>
                       </td>

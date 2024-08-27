@@ -35,7 +35,7 @@
 </style>
 <img style="position: absolute; z-index: -1" src="{{$proposal_background}}">
 <div class="main">
-    <span style="font-size: 0.75rem;">{{$client_name}} - {{$product_name}}</span>
+    <span style="font-size: 0.75rem;">{{$client_name}} - {{$project_name}}</span>
     <h1>OVERVIEW</h1>
     <p>{{$client_name}} has requested a double-sided, full color event flyer with event banner, and DJ spotlights.</p>
 

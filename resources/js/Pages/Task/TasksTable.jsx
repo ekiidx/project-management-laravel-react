@@ -15,7 +15,7 @@ export default function TasksTable({ tasks, success, queryParams = null, }) {
         }else {
             delete queryParams[name];
         }
-        router.get(route('task.index'), queryParams);
+        router.get(route('tasks.index'), queryParams);
     };
     
     const onKeyPress = (name, e) => {
@@ -35,7 +35,7 @@ export default function TasksTable({ tasks, success, queryParams = null, }) {
             queryParams.sort_field = name;
             queryParams.sort_direction = 'asc';
         }
-        router.get(route('task.index'), queryParams);
+        router.get(route('tasks.index'), queryParams);
     };
     return (
         <>
@@ -147,7 +147,7 @@ export default function TasksTable({ tasks, success, queryParams = null, }) {
                                 <img src={task.image_path} style={{width: 60}} alt="" />
                             </td>
                             <td className="px-3 py-2 hover:underline text-nowrap">
-                                <Link href={route('task.show', task.id)}>
+                                <Link href={route('tasks.show', task.id)}>
                                     {task.name}
                                 </Link>
                             </td>
@@ -162,12 +162,12 @@ export default function TasksTable({ tasks, success, queryParams = null, }) {
                             <td className="px-3 py-2">{task.createdBy.name}</td>
                             <td className="px-3 py-2">
                                 <Link 
-                                    href={route('task.edit', task.id)} className="font-medium text-blue-600 hover:underline mx-1"
+                                    href={route('tasks.edit', task.id)} className="font-medium text-blue-600 hover:underline mx-1"
                                 >
                                     Edit 
                                 </Link>
                                 <Link 
-                                    href={route('task.destroy', task.id)} className="font-medium text-red-600 hover:underline mx-1"
+                                    href={route('tasks.destroy', task.id)} className="font-medium text-red-600 hover:underline mx-1"
                                 >
                                     Delete
                                 </Link>

@@ -8,7 +8,7 @@ class StripeController extends Controller
 {
     public function customers()
     {
-        $stripe = new \Stripe\StripeClient('sk_test_51JMHhJC25ihSyzVGGR2RwsNsWfdslWmNr1hUN31cXhtgQ1ggfyx0isFmfIr1MDayQkKAy2BF0Qs0jFY6kcY7qA7c00IErUegvK');
+        $stripe = new \Stripe\StripeClient('');
 
         $customers = $stripe->customers->all(['limit' => 10]);
 
@@ -20,7 +20,7 @@ class StripeController extends Controller
     public function products()
     {
         $YOUR_DOMAIN = 'http://localhost:8000';
-        $stripe = new \Stripe\StripeClient('sk_test_51JMHhJC25ihSyzVGGR2RwsNsWfdslWmNr1hUN31cXhtgQ1ggfyx0isFmfIr1MDayQkKAy2BF0Qs0jFY6kcY7qA7c00IErUegvK');
+        $stripe = new \Stripe\StripeClient('');
 
         $stripe->checkout->sessions->create([
             'ui_mode' => 'embedded',
@@ -38,7 +38,7 @@ class StripeController extends Controller
 
     public function checkout()
     {
-        // $stripeSecretKey = 'sk_test_51JMHhJC25ihSyzVGGR2RwsNsWfdslWmNr1hUN31cXhtgQ1ggfyx0isFmfIr1MDayQkKAy2BF0Qs0jFY6kcY7qA7c00IErUegvK';
+        // $stripeSecretKey = '';
         // $stripe = new \Stripe\StripeClient($stripeSecretKey);
        
         return inertia('Stripe/Checkout/Index');

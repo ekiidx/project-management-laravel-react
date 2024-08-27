@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use Spatie\Browsershot\Browsershot;
+use App\Models\Invoice;
 use Illuminate\Http\Request;
 
 class InvoiceController extends Controller
@@ -12,7 +13,11 @@ class InvoiceController extends Controller
      */
     public function index()
     {
-        return inertia("Invoice/Index");
+        $invoices = Invoice::all();
+
+        return inertia('Invoice/Index', [
+            'invoices' => $invoices
+        ]);
     }
 
     /**

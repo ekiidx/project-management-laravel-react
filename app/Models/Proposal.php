@@ -9,7 +9,7 @@ class Proposal extends Model
 {
     use HasFactory;
 
-    protected $fillable = ['client_name', 'user_id', 'product_name', 'stripe_payment_link', 'client_email'];
+    protected $fillable = ['client_name', 'project_name', 'user_id', 'product_name', 'stripe_payment_link', 'client_email'];
 
     public function user()
     {

@@ -22,7 +22,7 @@ export default function Create({ auth, project }) {
   const onSubmit = (e) => {
     e.preventDefault();
 
-    post(route("project.update", project.id));
+    post(route("projects.update", project.id));
   };
 
   return (
@@ -164,7 +164,7 @@ export default function Create({ auth, project }) {
               </div>
               <div className="mt-4 text-right">
                 <Link
-                  href={route("project.index")}
+                  href={route("projects.index")}
                   className="bg-gray-100 py-1 px-3 text-gray-800 rounded shadow transition-all hover:bg-gray-200 mr-2"
                 >
                   Cancel

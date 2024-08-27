@@ -80,7 +80,7 @@ export default function Show({ auth, success, project, tasks, if_tasks, queryPar
                                 <h2 className="font-semibold text-xl text-gray-800 leading-tight">
                                     Tasks
                                 </h2>
-                                <Link href={route("task.create")} className="bg-emerald-500 py-1 px-3 text-white font-bold rounded shadow transition-all hover:bg-emerald-600">
+                                <Link href={route("tasks.create", project.id)} className="bg-emerald-500 py-1 px-3 text-white font-bold rounded shadow transition-all hover:bg-emerald-600">
                                     New Task
                                 </Link>
                             </div>

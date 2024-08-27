@@ -32,7 +32,7 @@ export default function Create({ auth, user_id }) {
     const onSubmit = (e) => {
         e.preventDefault();
 
-        post(route('project.store'));
+        post(route('projects.store'));
     }
 
     return(
@@ -166,14 +166,14 @@ export default function Create({ auth, user_id }) {
                                 <InputError message={errors.project_status} className="mt-2" />
                             </div>
                             <div className="mb-4">
-                                <InputLabel htmlFor="project_image_path" value="Project Image" />
+                                <InputLabel htmlFor="project_image" value="Project Image" />
                                 <TextInput
-                                    id="project_image_path"
+                                    id="project_image"
                                     type="file"
-                                    name="image"
+                                    name="project_image"
                                     className="mt-1 block w-full"
-                                    onChange={e => setData('image', e.target.files[0])} />
-                                <InputError message={errors.image} className="mt-2" />
+                                    onChange={e => setData('project_image', e.target.files[0])} />
+                                <InputError message={errors.project_image} className="mt-2" />
                             </div>
                             <div className="text-right">
                                 <Link className="bg-gray-100 py-1 px-3 rounded shadow transition-all hover:bg-gray-200 mr-2">

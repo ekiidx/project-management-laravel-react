@@ -14,7 +14,7 @@ export default function Create({ auth }) {
         client_name: '',
         client_email: '',
         stripe_payment_link: '',
-        status: '',
+        status: 'pending',
         description: '',
         start_date: '',
         due_date: '',
@@ -34,7 +34,7 @@ export default function Create({ auth }) {
     const onSubmit = (e) => {
         e.preventDefault();
 
-        post(route('project.store'));
+        post(route('projects.store'));
     }
 
     return(
@@ -175,7 +175,6 @@ export default function Create({ auth }) {
                                     className="mt-1 block w-full"
                                     onChange={(e) => setData("status", e.target.value)} >
 
-                                    <option value="">Select Status</option>
                                     <option value="pending">Pending Payment</option>
                                     <option value="in_progress">In Progress</option>
                                     <option value="completed">Completed</option>

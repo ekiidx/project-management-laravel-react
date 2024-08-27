@@ -13,7 +13,7 @@ export default function Index({ auth, users, queryParams = null, success }) {
       delete queryParams[name];
     }
 
-    router.get(route("user.index"), queryParams);
+    router.get(route("users.index"), queryParams);
   };
 
   const onKeyPress = (name, e) => {
@@ -40,7 +40,7 @@ export default function Index({ auth, users, queryParams = null, success }) {
     if (!window.confirm("Are you sure you want to delete the user?")) {
       return;
     }
-    router.delete(route("user.destroy", user.id));
+    router.delete(route("users.destroy", user.id));
   };
 
   return (
@@ -52,7 +52,7 @@ export default function Index({ auth, users, queryParams = null, success }) {
             Clients
           </h2>
           <Link
-            href={route("user.create")}
+            href={route("users.create")}
             className="bg-emerald-500 py-1 px-3 text-white rounded shadow transition-all hover:bg-emerald-600"
           >
             Add new
@@ -150,7 +150,7 @@ export default function Index({ auth, users, queryParams = null, success }) {
                       >
                         <td className="px-3 py-2">{user.id}</td>
                         <th className="px-3 py-2 text-nowrap">
-                          <Link href={route('user.show', user.id)}>
+                          <Link href={route('users.show', user.id)}>
                             {user.name}
                           </Link>
                         </th>
@@ -160,7 +160,7 @@ export default function Index({ auth, users, queryParams = null, success }) {
                         </td>
                         <td className="px-3 py-2 text-nowrap">
                           <Link
-                            href={route("user.edit", user.id)}
+                            href={route("users.edit", user.id)}
                             className="font-medium text-blue-600 hover:underline mx-1"
                           >
                             Edit

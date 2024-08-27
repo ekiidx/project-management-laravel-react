@@ -16,6 +16,7 @@ return new class extends Migration
             $table->string('client_name');
             $table->foreignId('user_id')->constrained('users');
             $table->string('product_name');
+            $table->string('project_name');
             $table->string('stripe_payment_link');
             $table->string('client_email');
             $table->timestamps();

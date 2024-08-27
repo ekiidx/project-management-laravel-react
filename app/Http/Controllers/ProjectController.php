@@ -179,7 +179,7 @@ class ProjectController extends Controller
              // Proposal Preview
              $proposal_html = view('proposal', [
                 'client_name' => $data['client_name'],
-                'product_name' => $data['product_name'],
+                'project_name' => $data['project_name'],
                 'proposal_background' => $proposal_background,
                 'vue_design_logo' => $vue_design_logo,
                 'vue_design_icon' => $vue_design_icon
@@ -193,35 +193,38 @@ class ProjectController extends Controller
 
             // Create Invoice
              $invoice_number = '00113';
+             $invoice_data['client_name'] = $data['client_name'];
     
             // Invoice Preview
             $invoice_html = view('invoice', [
                 'client_name' => $data['client_name'],
-                'product_name' => $data['product_name'],
+                'project_name' => $data['project_name'],
                 'invoice_number' => $invoice_number,
                 'proposal_background' => $proposal_background,
                 'vue_design_logo' => $vue_design_logo,
             ])->render();
     
-            $filename = Browsershot::html($invoice_html)
+            Browsershot::html($invoice_html)
             ->format('Letter')
             ->save('storage/invoices/' . $data['client_name'] . ' - ' . $data['product_name'] . ' - ' . $date . ' - ' . 'invoice.pdf');
     
-            // Invoice::create($data);
+            Invoice::create($invoice_data);
 
             // Send Email
-            $message = 'This is a test email.';
+            // $message = 'This is a test email.';
             
-            Mail::send('email', [
-                'name' => $request->get('client_name'),
-                'email' => $request->get('client_email'), ],
-                function ($message) {
-                    $message->from('admin@project_management_laravel_react.com');
-                    $message->to('youremail@your_domain', 'Your Name')
-                    ->subject('New Project "' . 'Project Name' . '" Created.');
+            Mail::send('email_' . $data['product_name'], [
+                'name' => $request->client_name,
+                'email' => $request->client_email, ],
+                function ($message) use($data, $date) {
+                    $message->from('admin@project_management.com');
+                    $message->to($data['client_email'], $data['client_name'])
+                    ->subject('New Project "' . $data['project_name'] . '" Created.');
+                    $message->attach('storage/proposals/' . $data['client_name'] . ' - ' . $data['product_name'] . ' - ' . $date . ' - ' . 'proposal.pdf');
+                    $message->attach('storage/invoices/' . $data['client_name'] . ' - ' . $data['product_name'] . ' - ' . $date . ' - ' . 'invoice.pdf');
             });
 
-            return to_route('project.index')
+            return to_route('projects.index')
                 ->with('success', 'Project was created.');
         }
     }

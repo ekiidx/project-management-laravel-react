@@ -17,7 +17,7 @@ export default function Index({ auth, projects, queryParams = null, success }) {
         }else {
             delete queryParams[name]
         }
-        router.get(route('project.index'), queryParams);
+        router.get(route('projects.index'), queryParams);
     };
 
     const onKeyPress = (name, e) => {
@@ -37,14 +37,14 @@ export default function Index({ auth, projects, queryParams = null, success }) {
             queryParams.sort_field = name;
             queryParams.sort_direction = 'asc';
         }
-        router.get(route('project.index'), queryParams);
+        router.get(route('projects.index'), queryParams);
     };
 
     const deleteProject = (project) => {
         if (!window.confirm("Are you sure you want to delete the project?")) {
           return;
         }
-        router.delete(route("project.destroy", project.id));
+        router.delete(route("projects.destroy", project.id));
       };
 
     return (
@@ -55,7 +55,7 @@ export default function Index({ auth, projects, queryParams = null, success }) {
                 <h2 className="font-semibold text-xl text-gray-800 leading-tight">Projects</h2>
 
                 {userRole === 'admin' && 
-                    <Link href={route("project.create")} className="bg-emerald-500 py-1 px-3 text-white font-bold rounded shadow transition-all hover:bg-emerald-600">
+                    <Link href={route("projects.create")} className="bg-emerald-500 py-1 px-3 text-white font-bold rounded shadow transition-all hover:bg-emerald-600">
                     New Project
                     </Link>
                 }
@@ -172,7 +172,7 @@ export default function Index({ auth, projects, queryParams = null, success }) {
                                                 <img src={project.image_path} style={{width: 60}} alt="" />
                                             </td>
                                             <td className="px-3 py-2 hover:underline text-nowrap">
-                                                <Link href={route('project.show', project.id)}>
+                                                <Link href={route('projects.show', project.id)}>
                                                     {project.project_name}
                                                 </Link>
                                             </td>
@@ -185,13 +185,13 @@ export default function Index({ auth, projects, queryParams = null, success }) {
                                             <td className="px-3 py-2 text-nowrap">{project.created_at}</td>
                                             <td className="px-3 py-2 text-nowrap">{project.due_date}</td>
                                             <td className="px-3 py-2">
-                                                <Link href={route('user.show', project.user_id)}>
+                                                <Link href={route('users.show', project.user_id)}>
                                                     {project.created_by}
                                                 </Link>
                                             </td>
                                             <td className="px-3 py-2">
                                                 <Link 
-                                                    href={route('project.edit', project.id)} className="font-medium text-blue-600 hover:underline mx-1"
+                                                    href={route('projects.edit', project.id)} className="font-medium text-blue-600 hover:underline mx-1"
                                                 >
                                                     Edit 
                                                 </Link>

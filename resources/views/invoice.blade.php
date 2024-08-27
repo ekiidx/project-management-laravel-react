@@ -63,7 +63,7 @@
 </style>
 <img style="position: absolute; z-index: -1" src="{{$proposal_background}}">
 <div class="main">
-    <span style="font-size: 0.75rem;">{{$client_name}} - {{$product_name}}</span>
+    <span style="font-size: 0.75rem;">{{$client_name}} - {{$project_name}}</span>
 
     <div style="display: flex; justify-content: space-between; margin-bottom: 4rem;">
         <div>
