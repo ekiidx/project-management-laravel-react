@@ -11,14 +11,12 @@ export default function Create({ auth }) {
         project_name: '',
         user_id: '',
         product_name: '',
-        client_name: '',
-        client_email: '',
         stripe_payment_link: '',
         status: 'pending',
         description: '',
         start_date: '',
         due_date: '',
-        image_path: '',
+        project_image: '',
     })
 
     // const addField = () => {
@@ -188,7 +186,7 @@ export default function Create({ auth }) {
                                     type="file"
                                     name="project_image"
                                     className="mt-1 block w-full"
-                                    onChange={e => setData('project_image', e.target.files[0])} />
+                                    onChange={(e) => setData('project_image', e.target.files[0])} />
                                 <InputError message={errors.project_image} className="mt-2" />
                             </div>
                             <div className="text-right">

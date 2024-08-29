@@ -116,7 +116,7 @@ class ProjectController extends Controller
      * Store a newly created resource in storage.
      */
     // public function store(StoreProjectRequest $request, $id) {
-    public function store(Request $request, Project $project) 
+    public function store(StoreProjectRequest $request, Project $project) 
     {
         $user = auth()->user();
 
@@ -127,17 +127,7 @@ class ProjectController extends Controller
 
         if ($user->role === 'admin') {
 
-            $request->validate([
-                'project_name' => ['required', 'max:255'],
-                'product_name' => ['required', Rule::in(['event_flyer', 'event_flyer_banner', 'event_flyer_banner_spotlights', 'monthly_host', 'unlimited_monthly_package'])],
-                // 'client_name' => ['required', 'max:255'],
-                'stripe_payment_link' => ['url:http,https'],
-                'image' => ['nullable', 'image'],
-                'description' => ['nullable', 'string'],
-                'start_date' => ['nullable', 'date'],
-                'due_date' => ['nullable', 'date'],
-                'status' => ['required', Rule::in(['pending', 'in_progress', 'completed'])]
-            ]);
+            $data = $request->validated();
 
             $client_id = $data['user_id'] = $request->user_id;
             $client = User::find($client_id);
@@ -148,13 +138,19 @@ class ProjectController extends Controller
             $data['product_name'] = $request->product_name;
             $data['stripe_payment_link'] = $request->stripe_payment_link;
             $data['status'] = $request->status;
-            
-            /** @var $image \Illuminate\Http\UploadedFile */
-            $image = $data['project_image'] ?? null;
-            $data['created_by'] = '2';
+            $data['created_by'] = Auth::id();
             $data['updated_by'] = Auth::id();
-            if ($image) {
-                $data['project_image'] = $image->store('project/' . Str::random(), 'public');
+
+            if ($request->hasfile('project_image')) {
+                $image = $request->file('project_image');
+                $image_filename = $image->getClientOriginalName();
+                $image_extension = $image->getClientOriginalExtension();
+                $image_no_extension = explode('.' . $image_extension, $image_filename);
+
+                $image_slug = $image_no_extension[0] . '.' . $image_extension;
+
+                $image->storeAs('projects', $image_slug, 'public');
+                $data['project_image'] = '/storage/projects/' . $image_slug;
             }
             Project::create($data);
 
@@ -215,7 +211,8 @@ class ProjectController extends Controller
             
             Mail::send('email_' . $data['product_name'], [
                 'name' => $request->client_name,
-                'email' => $request->client_email, ],
+                'email' => $request->client_email,
+                'stripe_payment_link' => $data['stripe_payment_link'] ],
                 function ($message) use($data, $date) {
                     $message->from('admin@project_management.com');
                     $message->to($data['client_email'], $data['client_name'])
@@ -319,18 +316,31 @@ class ProjectController extends Controller
         if ($user->role === 'admin') {
 
             $data = $request->validated();
-            $image = $data['image'] ?? null;
-            $data['updated_by'] = Auth::id();
-            if ($image) {
-                if ($project->image_path) {
-                    Storage::disk('public')->deleteDirectory(dirname($project->image_path));
-                }
-                $data['image_path'] = $image->store('project/' . Str::random(), 'public');
-            }
-            $project->update($data);
+        
+            // $data['client_name'] = $client->name;
+            // $project->client_email = $request->client_email;
+            $project->user_id = $request->user_id;
+            $project->project_name = $request->project_name;
+            $project->product_name = $request->product_name;
+            $project->stripe_payment_link = $request->stripe_payment_link;
+            $project->status = $request->status;
+            $project->updated_by = Auth::id();
 
-            return to_route('project.index')
-                ->with('success', "Project \"$project->name\" was updated");
+            if ($request->hasfile('project_image')) {
+                $image = $request->file('project_image');
+                $image_filename = $image->getClientOriginalName();
+                $image_extension = $image->getClientOriginalExtension();
+                $image_no_extension = explode('.' . $image_extension, $image_filename);
+
+                $image_slug = $image_no_extension[0] . '.' . $image_extension;
+
+                $image->storeAs('projects', $image_slug, 'public');
+                $project->project_image = '/storage/projects/' . $image_slug;
+            }
+            $project->save();
+
+            return to_route('projects.index')
+                ->with('success', "Project \"$project->project_name\" was updated");
         }
     }
 
@@ -348,12 +358,12 @@ class ProjectController extends Controller
 
         if ($user->role === 'admin') {
 
-            $name = $project->name;
+            $name = $project->project_name;
             $project->delete();
-            if ($project->image_path) {
-                Storage::disk('public')->deleteDirectory(dirname($project->image_path));
+            if ($project->project_image) {
+                Storage::disk('public')->deleteDirectory(dirname($project->project_image));
             }
-            return to_route('project.index')
+            return to_route('projects.index')
                 ->with('success', "Project \"$name\" was deleted");
         }
     }

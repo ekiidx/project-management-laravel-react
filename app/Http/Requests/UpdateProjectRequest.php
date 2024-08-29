@@ -23,11 +23,13 @@ class UpdateProjectRequest extends FormRequest
     public function rules(): array
     {
         return [
-            "project_name" => ['required', 'max:255'],
-            'client_name' => ['required', 'max:255'],
-            'client_email' => ['required', 'max:255'],
-            'image' => ['nullable', 'image'],
-            "description" => ['nullable', 'string'],
+            'project_name' => ['required', 'max:255'],
+            'user_id' => ['required'],
+            'product_name' => ['required', Rule::in(['event_flyer', 'event_flyer_banner', 'event_flyer_banner_spotlights', 'monthly_host', 'unlimited_monthly_package'])],
+            // 'client_name' => ['required', 'max:255'],
+            'stripe_payment_link' => ['url:http,https'],
+            // 'project_image' => ['nullable'],
+            'description' => ['nullable', 'string'],
             'start_date' => ['nullable', 'date'],
             'due_date' => ['nullable', 'date'],
             'status' => ['required', Rule::in(['pending', 'in_progress', 'completed'])]

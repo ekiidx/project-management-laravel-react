@@ -1,10 +1,8 @@
-Hey, thanks for purchasing the Event Flyer + Banner package.
+<p>Hey, I've attached a proposal and invoice for the project. Turnaround is usually 2 weeks, but sometimes I can get it done ahead of time. Be sure to send over any examples or media content you have.</p>
 
-I've attached a proposal and invoice for the project. Turnaround is usually 2 weeks, but sometimes I can get it done ahead of time. Be sure to send over any examples or media content you have.
+<p>You can use this link here for payment: <a href="{{ $stripe_payment_link }}">{{ $stripe_payment_link}}</a></p>
 
-You can use this link here for payment: https://buy.stripe.com/aEU6qY2Ffffz3uw5kl
+<p>After payment we can schedule a time to meet up. Let me know if you have any questions.</p>
 
-After payment we can schedule a time to meet up. Let me know if you have any questions.
-
-Thanks
-Erik
+<p>Thanks<br>
+Erik</p>

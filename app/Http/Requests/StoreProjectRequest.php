@@ -24,10 +24,12 @@ class StoreProjectRequest extends FormRequest
     {
         return [
             'project_name' => ['required', 'max:255'],
+            'product_name' => ['required', Rule::in(['event_flyer', 'event_flyer_banner', 'event_flyer_banner_spotlights', 'monthly_host', 'unlimited_monthly_package'])],
             // 'client_name' => ['required', 'max:255'],
-            // 'client_email' => ['required', 'max:255'],
-            'image' => ['nullable', 'image'],
+            'stripe_payment_link' => ['url:http,https'],
+            'project_image' => ['nullable', 'image'],
             'description' => ['nullable', 'string'],
+            'start_date' => ['nullable', 'date'],
             'due_date' => ['nullable', 'date'],
             'status' => ['required', Rule::in(['pending', 'in_progress', 'completed'])]
         ];

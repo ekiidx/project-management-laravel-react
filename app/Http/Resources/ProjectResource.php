@@ -27,12 +27,15 @@ class ProjectResource extends JsonResource
             'client_email' => $this->client_email,
             'description' => $this->description,
             'created_at' => (new Carbon($this->created_at))->format('Y-m-d'),
+            'start_date' => $this->start_date,
             'due_date' => (new Carbon($this->due_date))->format('Y-m-d'),
             'status' => $this->status,
             // if the image_path exists, use Storage facade url, and pass $this->image_path, if not, pass empty string
             // 'image_path' => $this->image_path && !(str_starts_with($this->image_path, 'http')) ?
             //     Storage::url($this->image_path) : $this->image_path,
-            'image_path' => $this->image_path,
+            'product_name' => $this->product_name,
+            'stripe_payment_link' => $this->stripe_payment_link,
+            'project_image' => $this->project_image,
             'created_by' => $this->user->name,
             'updated_by' => $this->user->name,
             'user_id' => $this->user->id,

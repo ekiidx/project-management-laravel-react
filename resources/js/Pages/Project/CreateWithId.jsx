@@ -6,7 +6,7 @@ import TextInput from "@/Components/TextInput";
 import AuthenticatedLayout from "@/Layouts/AuthenticatedLayout";
 import { Head, Link, useForm } from "@inertiajs/react";
 
-export default function Create({ auth, user_id }) {
+export default function CreateWithId({ auth, user_id }) {
     const { data, setData, post, errors, reset } = useForm({
         project_name: '',
         // client_name: '',
