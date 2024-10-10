@@ -10,7 +10,7 @@ export default function AuthenticatedLayout({ user, header, children }) {
     const userRole = user.role;
 
     return (
-        <div className="min-h-screen bg-gray-100">
+        <div className="min-h-screen bg-gray-200">
             <nav className="bg-white border-b border-gray-100">
                 <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
                     <div className="flex justify-between h-16">
@@ -26,10 +26,10 @@ export default function AuthenticatedLayout({ user, header, children }) {
                                     <NavLink href={route('dashboard')} active={route().current('dashboard')}>
                                         Dashboard
                                     </NavLink>
-                                    <NavLink href={route('project.index')} active={route().current('project.index')}>
+                                    <NavLink href={route('projects.index')} active={route().current('projects.index')}>
                                         Projects
                                     </NavLink>
-                                    <NavLink href={route('invoice.index')} active={route().current('invoice.index')}>
+                                    <NavLink href={route('invoices.index')} active={route().current('invoices.index')}>
                                         Invoices
                                     </NavLink>
                                     {/* <NavLink href={route('task.index')} active={route().current('task.index')}>
@@ -43,18 +43,18 @@ export default function AuthenticatedLayout({ user, header, children }) {
                                     <NavLink href={route('dashboard')} active={route().current('dashboard')}>
                                         Dashboard
                                     </NavLink>
-                                    <NavLink href={route('user.index')} active={route().current('user.index')}>
+                                    <NavLink href={route('users.index')} active={route().current('users.index')}>
                                         Clients
                                     </NavLink>
-                                    <NavLink href={route('project.index')} active={route().current('project.index')}>
+                                    <NavLink href={route('projects.index')} active={route().current('projects.index')}>
                                         Projects
                                     </NavLink>
-                                    <NavLink href={route('invoice.index')} active={route().current('invoice.index')}>
+                                    <NavLink href={route('invoices.index')} active={route().current('invoices.index')}>
                                         Invoices
                                     </NavLink>
-                                    {/* <NavLink href={route('task.index')} active={route().current('task.index')}>
-                                        Tasks
-                                    </NavLink> */}
+                                    <NavLink href={route('proposals.index')} active={route().current('proposals.index')}>
+                                        Proposals
+                                    </NavLink>
                                 </div>
                             }
 

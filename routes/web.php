@@ -18,24 +18,29 @@ Route::redirect('/', '/dashboard');
 Route::middleware(['auth', 'verified'])->group(function () {
     Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
 
-    Route::resource('/project', ProjectController::class);
+    Route::resource('/projects', ProjectController::class);
     // Route::get('/task/my-tasks', [TaskController::class, 'myTasks'])
     //     ->name('task.myTasks');
-    Route::resource('/task', TaskController::class);
-    Route::resource('/user', UserController::class);
-    Route::get('/project/create', [ProjectController::class, 'create'])->name('project.create');
-    Route::get('/user/{id}/project/create', [ProjectController::class, 'create_with_id'])->name('project.create_with_id');
-    Route::post('/user/{id}/project/store', [ProjectController::class, 'store']);
-    Route::get('/project/{id}/task/create', [TaskController::class, 'create'])->name('tasks.create');
-    Route::post('/project/{id}/task/store', [TaskController::class, 'store']);
-
-    Route::resource('/invoice', InvoiceController::class);
+    Route::resource('/tasks', TaskController::class);
+    Route::resource('/users', UserController::class);
+    Route::get('/projects/create', [ProjectController::class, 'create'])->name('projects.create');
+    Route::get('/users/{id}/projects/create', [ProjectController::class, 'create_with_id'])->name('projects.create_with_id');
+    Route::post('/users/{id}/projects/store', [ProjectController::class, 'store']);
+    Route::get('/projects/{id}/tasks/create', [TaskController::class, 'create'])->name('tasks.create');
+    Route::post('/projects/{id}/tasks/store', [TaskController::class, 'store']);
 
     Route::get('/customers', [StripeController::class, 'customers']);
     Route::get('/checkout', [StripeController::class, 'checkout']);
     Route::get('/products', [StripeController::class, 'products']);
 
-    Route::get('/proposal', [ProposalController::class, 'create']);
+    Route::get('/proposals', [ProposalController::class, 'index'])->name('proposals.index');
+    Route::get('/proposals/create', [ProposalController::class, 'create'])->name('proposals.create');
+    Route::post('/proposals/store', [ProposalController::class, 'store'])->name('proposals.store');
+    Route::get('/proposals/{id}', [ProposalController::class, 'index'])->name('proposals.show');
+
+    Route::resource('/invoices', InvoiceController::class);
+    Route::get('/invoices/create', [InvoiceController::class, 'create'])->name('invoices.create');
+    Route::get('/invoices/{id}', [InvoiceController::class, 'show'])->name('invoices.show');
 });
 
 Route::middleware('auth')->group(function () {

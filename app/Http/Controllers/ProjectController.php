@@ -5,6 +5,8 @@ namespace App\Http\Controllers;
 use App\Http\Resources\ProjectResource;
 use App\Http\Resources\TaskResource;
 use App\Models\Project;
+use App\Models\Proposal;
+use App\Models\Invoice;
 use App\Models\User;
 use Illuminate\Http\Request;
 use App\Http\Requests\StoreProjectRequest;
@@ -12,6 +14,8 @@ use App\Http\Requests\UpdateProjectRequest;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
+use Spatie\Browsershot\Browsershot;
+use Carbon\Carbon;
 use Mail;
 use Illuminate\Validation\Rule;
 
@@ -112,7 +116,7 @@ class ProjectController extends Controller
      * Store a newly created resource in storage.
      */
     // public function store(StoreProjectRequest $request, $id) {
-    public function store(Request $request, Project $project) 
+    public function store(StoreProjectRequest $request, Project $project) 
     {
         $user = auth()->user();
 
@@ -123,53 +127,104 @@ class ProjectController extends Controller
 
         if ($user->role === 'admin') {
 
-            $request->validate([
-                'project_name' => ['required', 'max:255'],
-                // 'client_name' => ['required', 'max:255'],
-                // 'client_email' => ['required', 'max:255'],
-                'image' => ['nullable', 'image'],
-                'description' => ['nullable', 'string'],
-                'start_date' => ['nullable', 'date'],
-                'due_date' => ['nullable', 'date'],
-                'status' => ['required', Rule::in(['pending', 'in_progress', 'completed'])]
-            ]);
+            $data = $request->validated();
 
-            // $data = $request->validated();
-            // $project->users()->create({[
-            // ]}) 
-            // $user = User::where('id', $user)->firstOrFail();
-            // dd($request->user()->name);
-            // $id = '2';
+            $client_id = $data['user_id'] = $request->user_id;
+            $client = User::find($client_id);
 
-            $data['user_id'] = $request->user_id;
-            // $data['user_id'] = $request->input($user->id);
-            // $data['client_name'] = $request->name;
-            // $data['client_email'] = $request->email;
+            $data['client_name'] = $client->name;
+            $data['client_email'] = $client->email;
             $data['project_name'] = $request->project_name;
+            $data['product_name'] = $request->product_name;
+            $data['stripe_payment_link'] = $request->stripe_payment_link;
             $data['status'] = $request->status;
-            
-            /** @var $image \Illuminate\Http\UploadedFile */
-            $image = $data['image'] ?? null;
-            $data['created_by'] = '2';
+            $data['created_by'] = Auth::id();
             $data['updated_by'] = Auth::id();
-            if ($image) {
-                $data['image_path'] = $image->store('project/' . Str::random(), 'public');
-            }
+
+            if ($request->hasfile('project_image')) {
+                $image = $request->file('project_image');
+                $image_filename = $image->getClientOriginalName();
+                $image_extension = $image->getClientOriginalExtension();
+                $image_no_extension = explode('.' . $image_extension, $image_filename);
+
+                $image_slug = $image_no_extension[0] . '.' . $image_extension;
+
+                $image->storeAs('projects', $image_slug, 'public');
+                $data['project_image'] = '/storage/projects/' . $image_slug;
+            } else {
+                $data['project_image'] = '/assets/img/default-image.jpg';
+            }  
             Project::create($data);
 
-            $message = 'This is a test email.';
+            // Create Proposal
+            // $bgPath = 'assets/img/proposal-background.png';
+            // $bgType = pathinfo($bgPath, PATHINFO_EXTENSION);
+            // $bgData = file_get_contents($bgPath);
+            // $proposal_background = 'data:image/' . $bgType . ';base64,' . base64_encode($bgData);
+
+            $logoPath = 'assets/img/logo.png';
+            $logoType = pathinfo($logoPath, PATHINFO_EXTENSION);
+            $logoData = file_get_contents($logoPath);
+            $logo = 'data:image/' . $logoType . ';base64,' . base64_encode($logoData);
+
+            $logoPath = 'assets/img/icon.svg';
+            $logoType = pathinfo($logoPath, PATHINFO_EXTENSION);
+            $logoData = file_get_contents($logoPath);
+            $icon = 'data:image/' . $logoType . ';base64,' . base64_encode($logoData);
+
+            Proposal::create($data);
+
+             // Proposal Preview
+             $proposal_html = view('proposal_' . $request->product_name, [
+                'client_name' => $data['client_name'],
+                'project_name' => $data['project_name'],
+                // 'proposal_background' => $proposal_background,
+                'logo' => $logo,
+                'icon' => $icon
+            ])->render();
+
+            $date = Carbon::now()->format('m-d-Y');
+
+            Browsershot::html($proposal_html)
+            ->format('Letter')
+            ->save('storage/proposals/' . $data['client_name'] . ' - ' . $data['product_name'] . ' - ' . $date . ' - ' . 'proposal.pdf');
+
+            // Create Invoice
+             $invoice_number = $request->id;
+             $invoice_data['client_name'] = $data['client_name'];
+    
+            // Invoice Preview
+            $invoice_html = view('invoice_' . $request->product_name, [
+                'client_name' => $data['client_name'],
+                'project_name' => $data['project_name'],
+                'invoice_number' => $invoice_number,
+                // 'proposal_background' => $proposal_background,
+                'logo' => $logo,
+            ])->render();
+    
+            Browsershot::html($invoice_html)
+            ->format('Letter')
+            ->save('storage/invoices/' . $data['client_name'] . ' - ' . $data['product_name'] . ' - ' . $date . ' - ' . 'invoice.pdf');
+    
+            Invoice::create($invoice_data);
+
+            // Send Email
+            // $message = 'This is a test email.';
             
-            Mail::send('email', [
-                'name' => $request->get('client_name'),
-                'email' => $request->get('client_email'), ],
-                function ($message) {
-                    $message->from('admin@project_management_laravel_react.com');
-                    $message->to('youremail@your_domain', 'Your Name')
-                    ->subject('New Project "' . 'Project Name' . '" Created.');
+            Mail::send('email_' . $data['product_name'], [
+                'name' => $request->client_name,
+                'email' => $request->client_email,
+                'stripe_payment_link' => $data['stripe_payment_link'] ],
+                function ($message) use($data, $date) {
+                    $message->from('admin@project_management.com');
+                    $message->to($data['client_email'], $data['client_name'])
+                    ->subject('New Project "' . $data['project_name'] . '" Created.');
+                    $message->attach('storage/proposals/' . $data['client_name'] . ' - ' . $data['product_name'] . ' - ' . $date . ' - ' . 'proposal.pdf');
+                    $message->attach('storage/invoices/' . $data['client_name'] . ' - ' . $data['product_name'] . ' - ' . $date . ' - ' . 'invoice.pdf');
             });
 
-            return to_route('project.index')
-                ->with('success', 'Project was created');
+            return to_route('projects.index')
+                ->with('success', 'Project was created.');
         }
     }
 
@@ -263,18 +318,33 @@ class ProjectController extends Controller
         if ($user->role === 'admin') {
 
             $data = $request->validated();
-            $image = $data['image'] ?? null;
-            $data['updated_by'] = Auth::id();
-            if ($image) {
-                if ($project->image_path) {
-                    Storage::disk('public')->deleteDirectory(dirname($project->image_path));
-                }
-                $data['image_path'] = $image->store('project/' . Str::random(), 'public');
-            }
-            $project->update($data);
+        
+            // $data['client_name'] = $client->name;
+            // $project->client_email = $request->client_email;
+            $project->user_id = $request->user_id;
+            $project->project_name = $request->project_name;
+            $project->product_name = $request->product_name;
+            $project->stripe_payment_link = $request->stripe_payment_link;
+            $project->status = $request->status;
+            $project->updated_by = Auth::id();
 
-            return to_route('project.index')
-                ->with('success', "Project \"$project->name\" was updated");
+            if ($request->hasfile('project_image')) {
+                $image = $request->file('project_image');
+                $image_filename = $image->getClientOriginalName();
+                $image_extension = $image->getClientOriginalExtension();
+                $image_no_extension = explode('.' . $image_extension, $image_filename);
+
+                $image_slug = $image_no_extension[0] . '.' . $image_extension;
+
+                $image->storeAs('projects', $image_slug, 'public');
+                $project->project_image = '/storage/projects/' . $image_slug;
+            } else {
+                $project->project_image = '/assets/img/default-image.jpg';
+            }
+            $project->save();
+
+            return to_route('projects.index')
+                ->with('success', "Project \"$project->project_name\" was updated");
         }
     }
 
@@ -292,12 +362,12 @@ class ProjectController extends Controller
 
         if ($user->role === 'admin') {
 
-            $name = $project->name;
+            $name = $project->project_name;
             $project->delete();
-            if ($project->image_path) {
-                Storage::disk('public')->deleteDirectory(dirname($project->image_path));
+            if ($project->project_image) {
+                Storage::disk('public')->deleteDirectory(dirname($project->project_image));
             }
-            return to_route('project.index')
+            return to_route('projects.index')
                 ->with('success', "Project \"$name\" was deleted");
         }
     }

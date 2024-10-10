@@ -12,7 +12,7 @@ export default function Index({ auth, success, tasks, queryParams = null }) {
                         Tasks
                     </h2>
                     <Link
-                        href={route("task.create")}
+                        href={route("tasks.create")}
                         className="bg-emerald-500 py-1 px-3 text-white rounded shadow transition-all hover:bg-emerald-600"
                     >
                         Add new
@@ -25,7 +25,7 @@ export default function Index({ auth, success, tasks, queryParams = null }) {
             <div className="py-3">
                 <div className="max-w-7xl mx-auto sm:px-6 lg:px-8">
                     <div className="bg-white overflow-hidden shadow-sm sm:rounded-lg">
-                        <div className="p-6 text-gray-900">
+                        <div className="py-2 px-6 text-gray-900">
                             {/* <pre>{JSON.stringify(tasks, undefined, 2)}</pre> */}
                             <TasksTable 
                                 tasks={tasks} 

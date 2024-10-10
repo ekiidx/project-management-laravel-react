@@ -20,7 +20,7 @@ export default function Show({ auth, success, project, tasks, if_tasks, queryPar
                     <div className="bg-white shadow-sm sm:rounded-lg">
                         <div className="mb-2">
                             <img
-                                src={project.image_path}
+                                src={project.project_image}
                                 alt=""
                                 className="rounded-lg w-full h-64 object-cover"
                             />
@@ -41,10 +41,10 @@ export default function Show({ auth, success, project, tasks, if_tasks, queryPar
                                         </span>
                                         </p>
                                     </div>
-                                    <div className="mb-4">
+                                    {/* <div className="mb-4">
                                         <label className="font-bold text-lg">Created By</label>
                                         <p className="mt-1">{project.created_by}</p>
-                                    </div>
+                                    </div> */}
                                 </div>
 
                                 <div className="mb-4">
@@ -56,10 +56,10 @@ export default function Show({ auth, success, project, tasks, if_tasks, queryPar
                                         <label className="font-bold text-lg">Created Date</label>
                                         <p className="mt-1">{project.created_at}</p>
                                     </div>
-                                    <div className="mb-4">
+                                    {/* <div className="mb-4">
                                         <label className="font-bold text-lg">Updated By</label>
                                         <p className="mt-1">{project.updated_by}</p>
-                                    </div>
+                                    </div> */}
                                 </div>
                                 <div>
                                     <label className="font-bold text-lg">Project Description</label>
@@ -80,7 +80,7 @@ export default function Show({ auth, success, project, tasks, if_tasks, queryPar
                                 <h2 className="font-semibold text-xl text-gray-800 leading-tight">
                                     Tasks
                                 </h2>
-                                <Link href={route("task.create")} className="bg-emerald-500 py-1 px-3 text-white font-bold rounded shadow transition-all hover:bg-emerald-600">
+                                <Link href={route("tasks.create", project.id)} className="bg-emerald-500 py-1 px-3 text-white font-bold rounded shadow transition-all hover:bg-emerald-600">
                                     New Task
                                 </Link>
                             </div>

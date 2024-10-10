@@ -13,7 +13,7 @@ export default function Index({ auth, users, queryParams = null, success }) {
       delete queryParams[name];
     }
 
-    router.get(route("user.index"), queryParams);
+    router.get(route("users.index"), queryParams);
   };
 
   const onKeyPress = (name, e) => {
@@ -40,7 +40,7 @@ export default function Index({ auth, users, queryParams = null, success }) {
     if (!window.confirm("Are you sure you want to delete the user?")) {
       return;
     }
-    router.delete(route("user.destroy", user.id));
+    router.delete(route("users.destroy", user.id));
   };
 
   return (
@@ -52,7 +52,7 @@ export default function Index({ auth, users, queryParams = null, success }) {
             Clients
           </h2>
           <Link
-            href={route("user.create")}
+            href={route("users.create")}
             className="bg-emerald-500 py-1 px-3 text-white rounded shadow transition-all hover:bg-emerald-600"
           >
             Add new
@@ -70,11 +70,19 @@ export default function Index({ auth, users, queryParams = null, success }) {
             </div>
           )}
           <div className="bg-white overflow-hidden shadow-sm sm:rounded-lg">
-            <div className="p-6 text-gray-900">
+            <div className="py-2 px-6 text-gray-900">
               <div className="overflow-auto">
                 <table className="w-full text-sm text-left rtl:text-right text-gray-500">
                   <thead className="text-xs text-gray-700 uppercase border-gray-500">
                     <tr className="text-nowrap">
+                      <TableHeading 
+                          name="id"
+                          sort_field={queryParams.sort_field}
+                          sort_direction={queryParams.sort_direction}
+                          sortChanged={sortChanged}
+                      >
+                          ID
+                      </TableHeading>
                       <TableHeading
                         name="name"
                         sort_field={queryParams.sort_field}
@@ -140,8 +148,9 @@ export default function Index({ auth, users, queryParams = null, success }) {
                         className="bg-white border-b"
                         key={user.id}
                       >
+                        <td className="px-3 py-2">{user.id}</td>
                         <th className="px-3 py-2 text-nowrap">
-                          <Link href={route('user.show', user.id)}>
+                          <Link href={route('users.show', user.id)}>
                             {user.name}
                           </Link>
                         </th>
@@ -151,7 +160,7 @@ export default function Index({ auth, users, queryParams = null, success }) {
                         </td>
                         <td className="px-3 py-2 text-nowrap">
                           <Link
-                            href={route("user.edit", user.id)}
+                            href={route("users.edit", user.id)}
                             className="font-medium text-blue-600 hover:underline mx-1"
                           >
                             Edit

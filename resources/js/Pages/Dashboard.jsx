@@ -60,7 +60,7 @@ export default function Dashboard({
         <div className="max-w-7xl mx-auto sm:px-6 lg:px-8 grid grid-cols-3 gap-2">
           <div className="bg-white overflow-hidden shadow-sm sm:rounded-lg">
             <div className="p-6 text-gray-900">
-              <h3 className="text-amber-500 text-2xl font-semibold">
+              <h3 className="text-amber-500 md:text-lg font-semibold">
                 Pending Tasks
               </h3>
               <p className="text-xl mt-4">
@@ -71,7 +71,7 @@ export default function Dashboard({
           </div>
           <div className="bg-white overflow-hidden shadow-sm sm:rounded-lg">
             <div className="p-6 text-gray-900">
-              <h3 className="text-blue-500 text-2xl font-semibold">
+              <h3 className="text-blue-500 md:text-lg font-semibold">
                 In Progress Tasks
               </h3>
               <p className="text-xl mt-4">
@@ -82,7 +82,7 @@ export default function Dashboard({
           </div>
           <div className="bg-white overflow-hidden shadow-sm sm:rounded-lg">
             <div className="p-6 text-gray-900">
-              <h3 className="text-green-500 text-2xl font-semibold">
+              <h3 className="text-green-500 md:text-lg font-semibold">
                 Completed Tasks
               </h3>
               <p className="text-xl mt-4">
@@ -149,12 +149,12 @@ export default function Dashboard({
                     <tr key={task.id}>
                       <td className="px-3 py-2">{task.id}</td>
                       <td className="px-3 py-2 hover:underline">
-                        <Link href={route("project.show", task.project.id)}>
+                        <Link href={route("projects.show", task.project.id)}>
                           {task.project.project_name}
                         </Link>
                       </td>
                       <td className="px-3 py-2 hover:underline">
-                        <Link href={route("task.show", task.id)}>
+                        <Link href={route("tasks.show", task.id)}>
                           {task.name}
                         </Link>
                       </td>

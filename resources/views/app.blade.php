@@ -10,6 +10,10 @@
         <link rel="preconnect" href="https://fonts.bunny.net">
         <link href="https://fonts.bunny.net/css?family=figtree:400,500,600&display=swap" rel="stylesheet" />
 
+        <!-- Stylesheets -->
+        <?php $version = '?v=1.0.0'; ?>
+        <link rel="stylesheet" href="{{ asset('/assets/css/main.css') }}<?php echo $version; ?>">
+
         <!-- Scripts -->
         @routes
         @viteReactRefresh
